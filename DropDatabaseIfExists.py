@@ -12,9 +12,9 @@ cursor = cnxn.cursor()
 
 dbName = "VRX_pacificnational"
 
-sqlcommand = ("IF (NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = '" + dbName + "'))\n" +
+sqlcommand = ("IF (EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = '" + dbName + "'))\n" +
                     "Begin \n" +
-                    "Create Database " + dbName + "\n"
+                    "Drop Database " + dbName + "\n"
                     "End")
              
 
