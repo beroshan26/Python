@@ -15,22 +15,9 @@ print("Connected to Sql Server " + sqlServerName)
 
 cursor = cnxn.cursor()
 
-dbName = cmdArgs[2]
+backUpFileName = cmdArgs[2]
 
-backUpFileName = cmdArgs[3]
-
-tempFolder = cmdArgs[4]
-
-sqlDropCommand = ("IF (EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = '" + dbName + "'))\n" +
-                    "Begin \n" +
-                    "Drop Database " + dbName + "\n"
-                    "End")
-             
-print("Dropping database " + dbName)
-			 
-cursor.execute(sqlDropCommand)
-
-print("Dropped database " + dbName)
+tempFolder = cmdArgs[3]
 
 sqlFileListCmd = "restore filelistonly  FROM  DISK = " + backUpFileName
 
@@ -44,6 +31,18 @@ mdfLogicalFileName = rows[0][0]
 
 ldfLogicalFileName = rows[1][0]
 
+dbName = mdfLogicalFileName
+
+sqlDropCommand = ("IF (EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = '" + dbName + "'))\n" +
+                    "Begin \n" +
+                    "Drop Database " + dbName + "\n"
+                    "End")
+             
+print("Dropping database " + dbName)
+			 
+cursor.execute(sqlDropCommand)
+
+print("Dropped database " + dbName)
 
 sqlRestoreCommand = "USE [master]; \
                RESTORE DATABASE " + dbName + " FROM  DISK = " + backUpFileName + " \
